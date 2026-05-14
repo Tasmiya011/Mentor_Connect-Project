@@ -1,0 +1,170 @@
+[
+  {
+    "id":1,
+    "userId":2,
+    "name":"Jane Doe",
+    "email":"jane@example.com",
+    "semester":3,
+    "mentorId":1
+  },
+  {
+    "id":2,
+    "userId":4,
+    "name":"Sara Lee",
+    "email":"sara@example.com",
+    "semester":2,
+    "mentorId":3
+  },
+  {
+    "id":3,
+    "userId":6,
+    "name":"Lily Brown",
+    "email":"lily@example.com",
+    "semester":1,
+    "mentorId":5
+  },
+  {
+    "id":4,
+    "userId":8,
+    "name":"Emma White",
+    "email":"emma@example.com",
+    "semester":4,
+    "mentorId":7
+  },
+  {
+    "id":5,
+    "userId":10,
+    "name":"Sophia Green",
+    "email":"sophia@example.com",
+    "semester":2,
+    "mentorId":9
+  },
+  {
+    "id":6,
+    "userId":12,
+    "name":"Ava Black",
+    "email":"ava@example.com",
+    "semester":3,
+    "mentorId":11
+  },
+  {
+    "id":7,
+    "userId":14,
+    "name":"Mia Gray",
+    "email":"mia@example.com",
+    "semester":1,
+    "mentorId":13
+  },
+  {
+    "id":8,
+    "userId":16,
+    "name":"Ella Scott",
+    "email":"ella@example.com",
+    "semester":4,
+    "mentorId":15
+  },
+  {
+    "id":9,
+    "userId":18,
+    "name":"Chloe Adams",
+    "email":"chloe@example.com",
+    "semester":2,
+    "mentorId":17
+  },
+  {
+    "id":10,
+    "userId":20,
+    "name":"Zoe Clark",
+    "email":"zoe@example.com",
+    "semester":3,
+    "mentorId":19
+  },
+  {
+    "id":11,
+    "userId":2,
+    "name":"Anna Hall",
+    "email":"anna@example.com",
+    "semester":1,
+    "mentorId":1
+  },
+  {
+    "id":12,
+    "userId":4,
+    "name":"Lucy King",
+    "email":"lucy@example.com",
+    "semester":2,
+    "mentorId":3
+  },
+  {
+    "id":13,
+    "userId":6,
+    "name":"Hannah Wright",
+    "email":"hannah@example.com",
+    "semester":3,
+    "mentorId":5
+  },
+  {
+    "id":14,
+    "userId":8,
+    "name":"Isabella Young",
+    "email":"isabella@example.com",
+    "semester":4,
+    "mentorId":7
+  },
+  {
+    "id":15,
+    "userId":10,
+    "name":"Nora Allen",
+    "email":"nora@example.com",
+    "semester":1,
+    "mentorId":9
+  },
+  {
+    "id":16,
+    "userId":12,
+    "name":"Layla Hill",
+    "email":"layla@example.com",
+    "semester":2,
+    "mentorId":11
+  },
+  {
+    "id":17,
+    "userId":14,
+    "name":"Grace Baker",
+    "email":"grace@example.com",
+    "semester":3,
+    "mentorId":13
+  },
+  {
+    "id":18,
+    "userId":16,
+    "name":"Luna Nelson",
+    "email":"luna@example.com",
+    "semester":4,
+    "mentorId":15
+  },
+  {
+    "id":19,
+    "userId":18,
+    "name":"Maya Carter",
+    "email":"maya@example.com",
+    "semester":1,
+    "mentorId":17
+  },
+  {
+    "id":20,
+    "userId":20,
+    "name":"Elena Mitchell",
+    "email":"elena@example.com",
+    "semester":2,
+    "mentorId":19
+  },
+   {
+    "id":22,
+    "userId":21,
+    "name":"student",
+    "email":"student@example.com",
+    "semester":2,
+    "mentorId":21
+   }
+]

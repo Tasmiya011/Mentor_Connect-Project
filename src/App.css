@@ -36,3 +36,38 @@
     transform: rotate(360deg);
   }
 }
+/* Login Page */
+.login-container {
+  text-align: center;
+  padding: 50px;
+}
+
+.login-title {
+  font-size: 32px;
+  margin-bottom: 25px;
+}
+
+.login-box {
+  background: white;
+  width: 350px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.login-input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+}
+

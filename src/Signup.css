@@ -1,0 +1,121 @@
+/* ============================================
+   Signup.css – merged with UI theme system
+   Full UI card layout + original text/link classes
+   ============================================ */
+
+/* UI layout classes */
+.signup-wrapper {
+  min-height: 100vh;
+  background: var(--bg-hero, linear-gradient(145deg, #e0f2fe 0%, #bae6fd 100%));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.signup-card {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--radius-card, 2rem);
+  padding: 2.5rem;
+  box-shadow: 0 24px 56px -12px rgba(42, 82, 152, 0.2);
+}
+
+.signup-logo {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-dark, #0f2b5e), var(--teal, #38b2ac));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.signup-card h2 {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--brand-dark, #0f2b5e);
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.signup-sub {
+  color: var(--text-muted, #475569);
+  font-size: 0.88rem;
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+/* Original classes (kept and themed) */
+.signup-text {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--text-muted, #555);
+  font-size: 0.88rem;
+}
+
+.signup-link {
+  color: var(--teal, #007bff);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+/* UI form submit button (if used directly) */
+.signup-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 0.85rem;
+  font-size: 1rem;
+  background: var(--teal, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition, 0.2s);
+}
+
+.signup-submit:hover {
+  background: var(--teal-dark, #1d4ed8);
+  transform: translateY(-1px);
+}
+
+/* Login link (UI) */
+.signup-login {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, #475569);
+}
+
+.signup-login span {
+  color: var(--brand-mid, #2563eb);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.signup-login span:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .signup-card {
+    padding: 1.5rem;
+  }
+  .signup-card h2 {
+    font-size: 1.3rem;
+  }
+}

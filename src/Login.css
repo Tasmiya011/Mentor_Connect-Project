@@ -1,0 +1,282 @@
+/* ============================================
+   Login.css – merged with UI theme system
+   Two‑column layout from UI, full theming via CSS variables,
+   fallbacks provided, original input/button styles preserved.
+   ============================================ */
+
+/* ---------- Layout (UI) ---------- */
+.login-page-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--font-body, 'Segoe UI', 'Inter', sans-serif);
+}
+
+/* Left decorative panel */
+.login-left {
+  flex: 0 0 45%;
+  background: var(--bg-hero, linear-gradient(145deg, #e0f2fe 0%, #bae6fd 100%));
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-left-content {
+  position: relative;
+  z-index: 2;
+}
+
+.login-brand {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-dark, #0f2b5e), var(--brand-mid, #1e3a8a));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2rem;
+  text-decoration: none;
+}
+
+.login-left h2 {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--brand-dark, #0f2b5e);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.login-left p {
+  color: var(--text-muted, #475569);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.login-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-main, #1e293b);
+  font-weight: 500;
+}
+
+.login-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--teal, #38b2ac);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.login-compass-bg {
+  position: absolute;
+  bottom: -20px;
+  right: -30px;
+  font-size: 16rem;
+  opacity: 0.08;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* Right form panel */
+.login-right {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background: transparent;  /* override original white background */
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.login-card h2 {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--brand-dark, #0f2b5e);
+  margin-bottom: 0.4rem;
+}
+
+.login-sub {
+  color: var(--text-muted, #475569);
+  font-size: 0.88rem;
+  margin-bottom: 1.8rem;
+}
+
+/* ---------- Form elements (original + UI combined) ---------- */
+.input-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: var(--text-dark, #1e293b);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border, #cbd5e1);
+  border-radius: 1rem;
+  font-size: 1rem;
+  transition: var(--transition, 0.2s);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--teal, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 2.5rem;
+}
+
+.login-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Role selection (UI pill style) */
+.login-role-group {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin: 1.2rem 0 1.5rem;
+}
+
+.login-role-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border, #e2e8f0);
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #475569);
+  cursor: pointer;
+  transition: var(--transition, 0.2s);
+}
+
+.login-role-pill input {
+  display: none;
+}
+
+.login-role-pill.active {
+  border-color: var(--teal, #38b2ac);
+  background: var(--teal-light, #e6fffa);
+  color: var(--teal-dark, #0f5c5a);
+}
+
+.login-role-pill:hover {
+  border-color: var(--teal, #38b2ac);
+}
+
+/* Submit button */
+.login-btn,
+.login-submit {
+  width: 100%;
+  background: var(--teal, #2563eb);
+  color: white;
+  border: none;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: var(--transition, 0.2s);
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.login-btn:hover,
+.login-submit:hover {
+  background: var(--teal-dark, #1d4ed8);
+  transform: translateY(-1px);
+}
+
+/* Register link */
+.login-register {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, #475569);
+}
+
+.login-register span {
+  color: var(--brand-mid, #2563eb);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.login-register span:hover {
+  text-decoration: underline;
+}
+
+.login-bottom-note {
+  margin-top: 2rem;
+  color: var(--text-light, #64748b);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* ---------- Responsive (UI + original small screen fallback) ---------- */
+@media (max-width: 768px) {
+  .login-left {
+    display: none;
+  }
+  .login-right {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* For very small phones (original media query) */
+@media (max-width: 500px) {
+  .login-card {
+    max-width: 100%;
+  }
+}

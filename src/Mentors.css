@@ -1,0 +1,143 @@
+/* ============================================
+   Mentors.css – merged with UI theme system
+   Original layout (department groups, grid, card structure)
+   + UI theming (CSS variables, teal accents, modern avatar)
+   ============================================ */
+
+.mentors-page {
+  min-height: 100vh;
+  background: var(--bg-page, linear-gradient(135deg, #f9fafb 0%, #eef2ff 100%));
+  padding: 2rem 1rem;
+}
+
+.mentors-container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.mentors-title {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--brand-dark, #1f2937);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.department-group {
+  margin-bottom: 2.5rem;
+}
+
+.dept-heading {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--brand-mid, #4f46e5);
+  border-left: 5px solid var(--teal, #4f46e5);
+  padding-left: 1rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Optional: if you want the UI's gradient line after heading, uncomment:
+.dept-heading::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+*/
+
+.mentors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.mentor-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  border: 1px solid var(--border, #f3f4f6);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: var(--card-shadow, 0 4px 10px rgba(0,0,0,0.05));
+  transition: var(--transition, all 0.3s);
+}
+
+.mentor-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-hover, 0 20px 25px -12px rgba(0,0,0,0.1));
+}
+
+.mentor-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-mid, #4f46e5), var(--teal, #38b2ac));
+  color: #fff;
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-weight: 900;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.85rem;
+  box-shadow: 0 6px 18px rgba(61,181,160,0.3);
+}
+
+.mentor-card h4 {
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--brand-dark, #1f2937);
+  margin-bottom: 0.25rem;
+}
+
+.mentor-exp {
+  font-size: 0.85rem;
+  color: var(--text-muted, #6b7280);
+  margin-bottom: 1rem;
+}
+
+.view-profile-btn {
+  background: var(--teal, #4f46e5);
+  border: none;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition, all 0.2s);
+  font-family: var(--font-display, 'Segoe UI', sans-serif);
+}
+
+.view-profile-btn:hover {
+  background: var(--teal-dark, #2563eb);
+  transform: translateY(-2px);
+}
+
+.mentors-loading,
+.mentors-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  font-size: 1.1rem;
+  color: var(--text-muted, #4f46e5);
+}
+
+/* Responsive – keep original breakpoints + UI touch */
+@media (max-width: 640px) {
+  .mentors-grid {
+    grid-template-columns: 1fr;
+  }
+  .dept-heading {
+    font-size: 1.2rem;
+  }
+  .mentors-title {
+    font-size: 1.5rem;
+  }
+}
