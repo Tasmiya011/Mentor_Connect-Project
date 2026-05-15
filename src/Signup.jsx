@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./theme.css";
 import "./Signup.css";
 
+// src/pages/Signup.jsx
 export default function Signup() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -14,13 +15,7 @@ export default function Signup() {
   const [expertise, setExpertise] = useState("");
   const [exp, setExp] = useState("");
   const [bio, setBio] = useState("");
-  const [isVolunteer, setIsVolunteer] = useState(false);  // Feature 10
-
-  // Quiz fields (only for students)
-  const [learningStyle, setLearningStyle] = useState("mixed");
-  const [communication, setCommunication] = useState("chat");
-  const [projectSize, setProjectSize] = useState("medium");
-  const [availability, setAvailability] = useState("flexible");
+  const [isVolunteer, setIsVolunteer] = useState(false);
 
   const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -41,17 +36,10 @@ export default function Signup() {
       payload.expertise = expertise;
       payload.exp = exp;
       payload.bio = bio;
-      payload.isVolunteer = isVolunteer;   // Feature 10
+      payload.isVolunteer = isVolunteer;
     }
 
-    if (role === "student") {
-      payload.quizAnswers = {
-        learningStyle,
-        communication,
-        projectSize,
-        availability
-      };
-    }
+    // For students, we no longer send quizAnswers
 
     try {
       const res = await fetch(`${API}/api/auth/signup`, {
@@ -125,50 +113,11 @@ export default function Signup() {
                 <textarea className="mc-input" rows="3" placeholder="Tell us about yourself..."
                   value={bio} onChange={e => setBio(e.target.value)} />
               </div>
-              {/* Feature 10: Volunteer Checkbox */}
               <div className="mc-input-group">
                 <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
                   <input type="checkbox" checked={isVolunteer} onChange={e => setIsVolunteer(e.target.checked)} />
                   🌱 I want to volunteer for underprivileged students (Social Good)
                 </label>
-              </div>
-            </>
-          )}
-
-          {role === "student" && (
-            <>
-              <div className="mc-input-group">
-                <label>Learning style</label>
-                <select className="mc-input mc-select" value={learningStyle} onChange={e => setLearningStyle(e.target.value)}>
-                  <option value="visual">Visual (videos, diagrams)</option>
-                  <option value="reading">Reading (articles, books)</option>
-                  <option value="hands-on">Hands-on (projects, coding)</option>
-                  <option value="mixed">Mixed</option>
-                </select>
-              </div>
-              <div className="mc-input-group">
-                <label>Preferred communication</label>
-                <select className="mc-input mc-select" value={communication} onChange={e => setCommunication(e.target.value)}>
-                  <option value="chat">Chat / Messaging</option>
-                  <option value="video">Video calls</option>
-                  <option value="email">Email</option>
-                </select>
-              </div>
-              <div className="mc-input-group">
-                <label>Project size you prefer</label>
-                <select className="mc-input mc-select" value={projectSize} onChange={e => setProjectSize(e.target.value)}>
-                  <option value="small">Small (weeks)</option>
-                  <option value="medium">Medium (1-3 months)</option>
-                  <option value="large">Large (3+ months)</option>
-                </select>
-              </div>
-              <div className="mc-input-group">
-                <label>Availability</label>
-                <select className="mc-input mc-select" value={availability} onChange={e => setAvailability(e.target.value)}>
-                  <option value="weekdays">Weekdays</option>
-                  <option value="weekends">Weekends</option>
-                  <option value="flexible">Flexible</option>
-                </select>
               </div>
             </>
           )}

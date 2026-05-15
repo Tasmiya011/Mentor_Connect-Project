@@ -1,5 +1,4 @@
 // src/pages/StudentPage.jsx
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
@@ -28,11 +27,19 @@ export default function StudentPage() {
   const [roadmapHtml, setRoadmapHtml] = useState("");
   const [showRoadmap, setShowRoadmap] = useState(false);
 
-  // Calendar
+  // Calendar events (persisted)
+  const [calendarEvents, setCalendarEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [eventTitle, setEventTitle] = useState("");
   const [eventType, setEventType] = useState("Meeting");
-  const [calendarEvents, setCalendarEvents] = useState([]);
+
+  // Feedback modal
+  const [showFeedback, setShowFeedback] = useState(null);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+
+  // Study Materials modal
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
 
   // Static data
   const [tasks] = useState([
@@ -40,9 +47,9 @@ export default function StudentPage() {
     { title: "Prepare ML Project PPT", due: "Friday", status: "In Progress" }
   ]);
   const [materials] = useState([
-    { title: "React Complete Guide", type: "PDF" },
-    { title: "AI/ML Beginner Roadmap", type: "Video" },
-    { title: "DSA Interview Sheet", type: "Document" }
+    { title: "React Complete Guide", type: "PDF", url: "https://react.dev/learn", description: "Official React documentation with interactive examples." },
+    { title: "AI/ML Beginner Roadmap", type: "Video", url: "https://www.youtube.com/watch?v=GwIo3gDZCVQ", description: "Step‑by‑step video to start ML journey." },
+    { title: "DSA Interview Sheet", type: "Document", url: "https://docs.google.com/document/d/example", description: "Curated list of important DSA questions." }
   ]);
 
   // Profile editing
@@ -50,6 +57,63 @@ export default function StudentPage() {
   const [editEducation, setEditEducation] = useState("");
   const [editSkills, setEditSkills] = useState("");
 
+  // ==================== LEVEL CALCULATION ====================
+  const getLevelInfo = (points) => {
+    if (points >= 1000) return { name: 'Ace', icon: '🦅', color: '#ffd700', next: null, pointsToNext: 0 };
+    if (points >= 500) return { name: 'Platinum', icon: '💎', color: '#b0c4de', next: 'Ace', pointsToNext: 1000 - points };
+    if (points >= 250) return { name: 'Gold', icon: '🥇', color: '#ffd700', next: 'Platinum', pointsToNext: 500 - points };
+    if (points >= 100) return { name: 'Silver', icon: '🥈', color: '#c0c0c0', next: 'Gold', pointsToNext: 250 - points };
+    return { name: 'Bronze', icon: '🥉', color: '#cd7f32', next: 'Silver', pointsToNext: 100 - points };
+  };
+
+  // ==================== PERSIST CALENDAR EVENTS ====================
+  useEffect(() => {
+    const stored = localStorage.getItem(`calendarEvents_${id}`);
+    if (stored) setCalendarEvents(JSON.parse(stored));
+  }, [id]);
+
+  useEffect(() => {
+    localStorage.setItem(`calendarEvents_${id}`, JSON.stringify(calendarEvents));
+  }, [calendarEvents, id]);
+
+  const addCalendarEvent = () => {
+    if (!selectedDate || !eventTitle) return alert("Please fill date and title");
+    const newEvent = { id: Date.now(), date: selectedDate, title: eventTitle, type: eventType, completed: false };
+    setCalendarEvents([...calendarEvents, newEvent]);
+    setEventTitle("");
+  };
+
+  const completeEvent = (eventId) => {
+    setCalendarEvents(calendarEvents.filter(ev => ev.id !== eventId));
+  };
+
+  // ==================== FEEDBACK ====================
+  const submitFeedback = async () => {
+    if (!showFeedback) return;
+    try {
+      await fetch(`${API}/api/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          meetingId: showFeedback.meetingId,
+          fromUserId: id,
+          fromModel: "Student",
+          toUserId: showFeedback.mentorId,
+          toModel: "Mentor",
+          rating,
+          comment
+        })
+      });
+      alert("Thank you for your feedback!");
+    } catch (err) {
+      alert("Failed to submit feedback");
+    }
+    setShowFeedback(null);
+    setRating(5);
+    setComment("");
+  };
+
+  // ==================== FETCH DATA ====================
   useEffect(() => {
     fetchAll();
   }, [id]);
@@ -81,11 +145,63 @@ export default function StudentPage() {
     }
   };
 
-  const handleLogout = () => {
-    ["token", "role", "user", "loggedUser"].forEach(k => localStorage.removeItem(k));
-    navigate("/");
+  // ==================== ROADMAP ====================
+  const generateRoadmap = async () => {
+    let finalDuration = durationOption;
+    if (durationOption === "Custom") {
+      if (!customDuration.trim()) return alert("Enter custom duration (e.g., 8 weeks)");
+      finalDuration = customDuration.trim();
+    }
+    try {
+      const res = await fetch(`${API}/api/roadmap/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          goal: careerGoal,
+          duration: finalDuration,
+          skills: interestsInput,
+          learningStyle,
+          level: skillLevel
+        })
+      });
+      const data = await res.json();
+      if (!data.roadmap) throw new Error("No roadmap generated");
+      let html = `<h1 style="color:#4f46e5;">${data.roadmap.title}</h1>`;
+      data.roadmap.weeks.forEach(week => {
+        html += `
+          <div style="margin-bottom:1rem; padding:1rem; border:1px solid #ddd; border-radius:14px;">
+            <h3>Week ${week.week}: ${week.topic || ""}</h3>
+            <ul>${week.tasks.map(t => `<li>${t}</li>`).join("")}</ul>
+          </div>
+        `;
+      });
+      setRoadmapHtml(html);
+      setShowRoadmap(true);
+    } catch (err) {
+      alert("Roadmap generation failed: " + err.message);
+    }
   };
 
+  const downloadRoadmap = () => {
+    const element = document.getElementById("roadmap-content");
+    if (element) html2pdf().from(element).save("AI-Roadmap.pdf");
+  };
+
+  // ==================== MEETING SUMMARY ====================
+  const generateSummary = async (meetingId) => {
+    try {
+      const res = await fetch(`${API}/api/meetings/${meetingId}/summary`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      alert(`📋 Meeting Summary:\n\n${data.summary}\n\n✅ Action Items:\n${data.actions.join("\n")}`);
+      // Refresh student data to show updated points
+      fetchAll();
+    } catch (err) {
+      alert("Summary not available yet. Please wait until after the meeting.");
+    }
+  };
+
+  // ==================== UTILITIES ====================
   const updateInterests = async () => {
     const interestsArray = interestsInput.split(",").map(s => s.trim()).filter(s => s);
     await fetch(`${API}/api/students/${id}`, {
@@ -111,87 +227,6 @@ export default function StudentPage() {
     }
   };
 
-  // FIXED: Roadmap generation with logging
-  const generateRoadmap = async () => {
-    let finalDuration = durationOption;
-    if (durationOption === "Custom") {
-      if (!customDuration.trim()) {
-        alert("Please enter a custom duration (e.g., 8 weeks, 2 months)");
-        return;
-      }
-      finalDuration = customDuration.trim();
-    }
-
-    console.log("Sending duration to backend:", finalDuration);
-
-    try {
-      const res = await fetch(`${API}/api/roadmap/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          goal: careerGoal,
-          duration: finalDuration,
-          skills: interestsInput,
-          learningStyle,
-          level: skillLevel
-        })
-      });
-
-      const data = await res.json();
-      console.log("Backend response:", data);
-
-      if (!data.roadmap) throw new Error("No roadmap generated");
-      if (!data.roadmap.weeks || data.roadmap.weeks.length === 0) throw new Error("No weeks in roadmap");
-
-      // Warn if 3 months but only 1 week
-      if (finalDuration === "3 Months" && data.roadmap.weeks.length === 1) {
-        alert("⚠️ Backend returned only 1 week for 3 months. Please update your backend to generate multiple weeks based on duration.");
-      }
-
-      const html = `
-        <div>
-          <h1 style="color:#4f46e5; margin-bottom:20px;">${data.roadmap.title}</h1>
-          ${data.roadmap.weeks.map(week => `
-            <div style="margin-bottom:20px; padding:18px; border:1px solid #ddd; border-radius:14px;">
-              <h3>Week ${week.week}</h3>
-              <ul>${week.tasks.map(task => `<li>${task}</li>`).join("")}</ul>
-            </div>
-          `).join("")}
-        </div>
-      `;
-      setRoadmapHtml(html);
-      setShowRoadmap(true);
-    } catch (err) {
-      console.error(err);
-      alert("Roadmap generation failed: " + err.message);
-    }
-  };
-
-  const downloadRoadmap = () => {
-    const element = document.getElementById("roadmap-content");
-    html2pdf().from(element).save("AI-Roadmap.pdf");
-  };
-
-  const addCalendarEvent = () => {
-    if (!selectedDate || !eventTitle) {
-      alert("Please fill all fields");
-      return;
-    }
-    const newEvent = { id: Date.now(), date: selectedDate, title: eventTitle, type: eventType };
-    setCalendarEvents([...calendarEvents, newEvent]);
-    setEventTitle("");
-  };
-
-  const generateSummary = async (meetingId) => {
-    try {
-      const res = await fetch(`${API}/api/meetings/${meetingId}/summary`);
-      const data = await res.json();
-      alert(data.summary);
-    } catch (err) {
-      alert("Failed to generate summary");
-    }
-  };
-
   const startEditing = () => {
     setEditEducation(student?.education || "");
     setEditSkills((student?.skills || []).join(", "));
@@ -211,13 +246,15 @@ export default function StudentPage() {
         setStudent(updatedStudent);
         setIsEditingProfile(false);
         alert("Profile updated!");
-      } else {
-        alert("Update failed");
-      }
+      } else alert("Update failed");
     } catch (err) {
-      console.error(err);
       alert("Error updating profile");
     }
+  };
+
+  const handleLogout = () => {
+    ["token", "role", "user", "loggedUser"].forEach(k => localStorage.removeItem(k));
+    navigate("/");
   };
 
   if (loading) {
@@ -229,7 +266,11 @@ export default function StudentPage() {
     );
   }
 
-  const upcomingMeetings = meetings.filter(m => new Date(m.date) >= new Date());
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingMeetings = meetings.filter(m => m.date >= today);
+  const pastMeetings = meetings.filter(m => m.date < today);
+  const currentLevel = getLevelInfo(student?.points || 0);
+  const points = student?.points || 0;
 
   return (
     <div className="student-page-layout">
@@ -259,6 +300,33 @@ export default function StudentPage() {
               <div className="stat-card"><h2>{notifications.length}</h2><p>Notifications</p></div>
               <div className="stat-card"><h2>{tasks.length}</h2><p>Tasks</p></div>
             </div>
+
+            {/* Achievements Panel - Level + Points */}
+            <div className="premium-panel">
+              <h3>🏆 Achievement Level</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: '3rem' }}>{currentLevel.icon}</div>
+                <div>
+                  <h2 style={{ margin: 0, color: currentLevel.color }}>{currentLevel.name}</h2>
+                  <p style={{ margin: 0 }}>{points} points</p>
+                </div>
+              </div>
+              {currentLevel.next && (
+                <div style={{ marginTop: '1rem' }}>
+                  <div style={{ background: '#e2e8f0', borderRadius: '20px', overflow: 'hidden' }}>
+                    <div style={{ width: `${Math.min(100, (points / (currentLevel.pointsToNext + points)) * 100)}%`, background: '#14b8a6', height: '10px' }} />
+                  </div>
+                  <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>{currentLevel.pointsToNext} points until {currentLevel.next}</p>
+                </div>
+              )}
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {(student?.badges || []).map((b, idx) => (
+                  <span key={idx} className="skill-badge" style={{ background: '#fef3c7', color: '#92400e' }}>🏅 {b}</span>
+                ))}
+                {(!student?.badges || student.badges.length === 0) && <span>No badges yet. Schedule your first meeting!</span>}
+              </div>
+            </div>
+
             <div className="dashboard-grid">
               <div className="premium-panel">
                 <h3>👨‍🏫 Assigned Mentor</h3>
@@ -284,6 +352,7 @@ export default function StudentPage() {
                 </div>
               </div>
             </div>
+
             <div className="premium-panel">
               <h3>🗺️ AI Career Roadmap Generator</h3>
               <div className="roadmap-grid">
@@ -323,7 +392,7 @@ export default function StudentPage() {
             <h2>🔔 All Notifications</h2>
             <div className="notifications-full-list">
               {notifications.length === 0 ? (
-                <p style={{ color: "var(--text-light)", padding: "20px", textAlign: "center" }}>No notifications yet.</p>
+                <p>No notifications yet.</p>
               ) : (
                 notifications.map((n) => (
                   <div key={n._id} className="notification-item-full">
@@ -353,40 +422,80 @@ export default function StudentPage() {
                   <h4>{event.title}</h4>
                   <p>{event.date}</p>
                   <span>{event.type}</span>
+                  <button className="btn-outline complete-btn" onClick={() => completeEvent(event.id)}>✅ Complete</button>
                 </div>
               ))}
+              {calendarEvents.length === 0 && <p>No events. Add one above!</p>}
             </div>
           </div>
         )}
 
         {activeTab === "meetings" && (
           <div className="meetings-grid">
-            {upcomingMeetings.map(m => (
-              <div className="meeting-card" key={m._id}>
-                <div className="meeting-header">
-                  <h3>📅 {m.date}</h3>
-                  <span>⏰ {m.time}</span>
+            <h3 className="section-heading">📅 Upcoming Meetings</h3>
+            <div className="meeting-cards-grid">
+              {upcomingMeetings.map(m => (
+                <div className="meeting-card" key={m._id}>
+                  <div className="meeting-header">
+                    <h3>📅 {m.date}</h3>
+                    <span>⏰ {m.time}</span>
+                  </div>
+                  <p>{m.message}</p>
+                  <div className="meeting-actions">
+                    <button className="btn-teal" onClick={() => window.open(`https://meet.jit.si/MentorConnect_${m._id}`, "_blank")}>Join Video Call</button>
+                    <button className="btn-outline whiteboard-btn" onClick={() => window.open(`/whiteboard/${m._id}`, '_blank')}>🎨 Whiteboard</button>
+                  </div>
                 </div>
-                <p>{m.message}</p>
-                <div className="meeting-actions">
-                  <button className="btn-teal" onClick={() => window.open(`https://meet.jit.si/MentorConnect_${m._id}`, "_blank")}>Join Meeting</button>
-                  <button className="btn-outline" onClick={() => generateSummary(m._id)}>Summary</button>
+              ))}
+              {upcomingMeetings.length === 0 && <p className="no-data">No upcoming meetings.</p>}
+            </div>
+
+            <h3 className="section-heading" style={{ marginTop: "2rem" }}>✅ Past Meetings</h3>
+            <div className="meeting-cards-grid">
+              {pastMeetings.map(m => (
+                <div className="meeting-card past-meeting" key={m._id}>
+                  <div className="meeting-header">
+                    <h3>📅 {m.date}</h3>
+                    <span>⏰ {m.time}</span>
+                  </div>
+                  <p>{m.message}</p>
+                  <div className="meeting-actions">
+                    <button className="btn-outline summary-btn" onClick={() => generateSummary(m._id)}>📝 Summary</button>
+                    <button className="btn-outline feedback-btn" onClick={() => setShowFeedback({ meetingId: m._id, mentorId: m.mentorId?._id })}>💬 Feedback</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+              {pastMeetings.length === 0 && <p className="no-data">No past meetings yet.</p>}
+            </div>
           </div>
         )}
 
         {activeTab === "materials" && (
-          <div className="materials-grid">
-            {materials.map((m, idx) => (
-              <div className="material-card" key={idx}>
-                <h3>{m.title}</h3>
-                <p>{m.type}</p>
-                <button className="btn-outline">Open</button>
+          <>
+            <div className="materials-grid">
+              {materials.map((m, idx) => (
+                <div className="material-card" key={idx}>
+                  <div className="material-icon">📘</div>
+                  <h3>{m.title}</h3>
+                  <p>{m.type}</p>
+                  <button className="btn-outline" onClick={() => setSelectedMaterial(m)}>Open</button>
+                </div>
+              ))}
+            </div>
+            {selectedMaterial && (
+              <div className="modal-overlay" onClick={() => setSelectedMaterial(null)}>
+                <div className="modal-content" onClick={e => e.stopPropagation()}>
+                  <h3>{selectedMaterial.title}</h3>
+                  <p>{selectedMaterial.description}</p>
+                  <p><strong>Type:</strong> {selectedMaterial.type}</p>
+                  <a href={selectedMaterial.url} target="_blank" rel="noopener noreferrer" className="btn-teal" style={{ display: "inline-block", marginTop: "1rem", textDecoration: "none" }}>
+                    🔗 Access Material
+                  </a>
+                  <button className="btn-outline" onClick={() => setSelectedMaterial(null)} style={{ marginTop: "1rem", display: "block" }}>Close</button>
+                </div>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {activeTab === "tasks" && (
@@ -428,26 +537,52 @@ export default function StudentPage() {
               <div className="profile-info-card">
                 <h3>🎓 Education</h3>
                 {isEditingProfile ? (
-                  <input type="text" className="mc-input" value={editEducation} onChange={(e) => setEditEducation(e.target.value)} placeholder="e.g., B.Tech Computer Science, 3rd Year" />
+                  <input type="text" className="mc-input" value={editEducation} onChange={(e) => setEditEducation(e.target.value)} placeholder="e.g., B.Tech Computer Science" />
                 ) : (
                   <p className="info-value">{student?.education || "Not added yet"}</p>
                 )}
                 <h3 style={{ marginTop: "1.5rem" }}>⚙️ Skills & Interests</h3>
                 {isEditingProfile ? (
                   <>
-                    <textarea className="mc-input" rows="3" value={editSkills} onChange={(e) => setEditSkills(e.target.value)} placeholder="React, Node.js, AI, ML (comma separated)" />
+                    <textarea className="mc-input" rows="3" value={editSkills} onChange={(e) => setEditSkills(e.target.value)} placeholder="React, Node.js, AI (comma separated)" />
                     <small className="field-hint">Separate skills with commas</small>
                   </>
                 ) : (
                   <div className="skills-wrap">
-                    {student?.skills?.length ? student.skills.map((skill, idx) => <span key={idx} className="skill-badge">{skill}</span>) : <p className="info-value">No skills added yet</p>}
+                    {student?.skills?.length ? student.skills.map((skill, idx) => <span key={idx} className="skill-badge">{skill}</span>) : <p>No skills added yet</p>}
                   </div>
                 )}
+                <h3 style={{ marginTop: "1.5rem" }}>🏅 Badges & Level</h3>
+                <div className="skills-wrap">
+                  <span className="skill-badge" style={{ background: '#e0f2fe', color: '#0369a1' }}>{currentLevel.icon} {currentLevel.name}</span>
+                  {(student?.badges || []).map((b, idx) => (
+                    <span key={idx} className="skill-badge" style={{ background: '#fef3c7', color: '#92400e' }}>🏅 {b}</span>
+                  ))}
+                  {(!student?.badges || student.badges.length === 0) && <p>No badges yet. Keep learning!</p>}
+                </div>
               </div>
             </div>
           </div>
         )}
       </main>
+
+      {/* Feedback Modal */}
+      {showFeedback && (
+        <div className="modal-overlay" onClick={() => setShowFeedback(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Anonymous Feedback</h3>
+            <p>Rate your meeting (1‑5):</p>
+            <select className="mc-input" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+              {[1,2,3,4,5].map(r => <option key={r} value={r}>{r} star{r !== 1 ? 's' : ''}</option>)}
+            </select>
+            <textarea className="mc-input" rows="3" placeholder="Your comment (optional)" value={comment} onChange={(e) => setComment(e.target.value)} />
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+              <button className="btn-teal" onClick={submitFeedback}>Submit Feedback</button>
+              <button className="btn-outline" onClick={() => setShowFeedback(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

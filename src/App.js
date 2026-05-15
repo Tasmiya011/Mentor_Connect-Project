@@ -22,6 +22,7 @@ import Chatbot from "./chatbot.jsx";
 import Schedule from "./Schedule.jsx";
 import Progress from "./Progress.jsx";
 import PendingTask from "./PendingTask.jsx";
+import WhiteboardPage from "./WhiteboardPage";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="/report" element={<Report />} />
         <Route path="/addmentor" element={<Addmentor />} />
         <Route path="/addstudent" element={<Addstudent />} />
+        <Route path="/whiteboard/:meetingId" element={<WhiteboardPage />} />
       </Routes>
       <Chatbot />
     </BrowserRouter>

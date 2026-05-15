@@ -84,6 +84,10 @@ io.on("connection", (socket) => {
     socket.to(room).emit("whiteboard-update", data);
   });
 
+  socket.on("whiteboard-clear", ({ room }) => {
+    socket.to(room).emit("whiteboard-clear");
+  });
+
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
