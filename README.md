@@ -1,70 +1,180 @@
-# Getting Started with Create React App
+# MentorConnect 🚀
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+MentorConnect is a full-stack mentor-mentee collaboration platform designed to bridge the gap between students and mentors through personalized guidance, structured learning, and real-time interaction.
 
-## Available Scripts
+It provides students with career roadmaps, meeting scheduling, study materials, task tracking, and collaborative learning tools, while mentors can manage mentees, assign tasks, schedule meetings, and share resources.
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 👨‍🎓 Student Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Personalized student dashboard
+- AI-powered roadmap generator
+- Generate roadmaps based on:
+  - Career goal
+  - Duration
+  - Additional requirements
+- Schedule and manage meetings
+- Interactive calendar
+- Add:
+  - Meetings
+  - Reminders
+  - Tasks
+- View assigned mentor details
+- Access study materials shared by mentors
+- Track mentor-assigned tasks
+- Profile section with achievements and skills
+- Real-time notifications
+- Integrated AI chatbot assistant
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+### 👨‍🏫 Mentor Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Mentor dashboard
+- Manage assigned mentees
+- Schedule meetings
+- Assign tasks to students
+- Upload study materials and resources
+- Provide feedback to students
+- Manage mentor profile
+- Track mentee progress
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🤖 MentorConnect Assistant
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The platform includes an AI-powered assistant that helps users navigate the application.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+It can answer questions related to:
 
-### `npm run eject`
+- Roadmap generation
+- Meeting scheduling
+- Task assignment
+- Feedback process
+- Study material uploads
+- Whiteboard troubleshooting
+- Dashboard usage
+- Notifications
+- Account-related queries
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Quick question suggestions provide a chatbot experience similar to modern support assistants.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🎨 UI Highlights
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Premium modern dashboard design
+- Responsive layout
+- Gradient-based theme
+- Interactive stat cards
+- Enhanced sidebar navigation
+- Professional chatbot interface
+- Mobile-friendly experience
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🛠️ Tech Stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Frontend
 
-### Code Splitting
+- React.js
+- React Router
+- CSS3
+- Fetch API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Backend
 
-### Analyzing the Bundle Size
+- Node.js
+- Express.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Database
 
-### Making a Progressive Web App
+- MongoDB
+- Mongoose
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Authentication
 
-### Advanced Configuration
+- JWT Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Additional Integrations
 
-### Deployment
+- Jitsi Meet (Video Meetings)
+- Collaborative Whiteboard
+- AI Chat Assistant
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## ⚙️ Installation
 
-### `npm run build` fails to minify
+### 1. Clone the Repository
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+git clone https://github.com/Tasmiya011/Mentor_Connect-Project.git
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd Mentor_Connect-Project
+```
+## Frontend Setup
+
+```bash
+cd mentormentee
+npm install
+npm start
+```
+
+Frontend runs on:
+http://localhost:3000
+```
+
+## Backend Setup
+
+Open a new terminal:
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+Backend runs on:
+```
+http://localhost:5000
+```
+## Environment Variables
+
+Create a `.env` file in the backend folder.
+
+Example:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+```
+
+Frontend `.env`:
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+## 🚀 Future Enhancements
+
+- Email notifications
+- Password reset functionality
+- AI-based mentor matching improvements
+- Resume analysis
+- Interview preparation assistant
+- Progress analytics dashboard
+- Real-time chat between mentors and students
+- Cloud storage for study materials
+- Deployment on AWS/Vercel
+
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+**MentorConnect — Learn, Connect, Grow.**
